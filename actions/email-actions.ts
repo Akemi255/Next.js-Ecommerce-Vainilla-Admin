@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (email: string) => {
     });
 
     // URL para verificar el correo
-    const verificationLink = `http://localhost:3000/verify-email?token=${token}&email=${email}`;
+    const verificationLink = `https://next-js-ecommerce-vainilla-admin.vercel.app/verify-email?token=${token}&email=${email}`;
 
     // Crear el transportador de Nodemailer usando Gmail
     const transporter = nodemailer.createTransport({
@@ -73,7 +73,7 @@ export const sendPasswordResetEmail = async (email: string) => {
     });
 
     // URL para restablecer la contraseña
-    const resetLink = `http://localhost:3000/reset-password/verify-password?token=${token}&email=${email}`;
+    const resetLink = `https://next-js-ecommerce-vainilla-admin.vercel.app/reset-password/verify-password?token=${token}&email=${email}`;
 
     // Configurar Nodemailer para enviar el correo electrónico
     const transporter = nodemailer.createTransport({
