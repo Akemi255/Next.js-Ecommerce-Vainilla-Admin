@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
 
@@ -27,7 +27,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
         }, {
             href: `/users`,
             label: "Usuarios",
-            active: pathname === `/orders`
+            active: pathname === `/users`
         }
     ]
 
