@@ -82,18 +82,18 @@ const RolesSection = ({ email, users: initialUsers }: RolesSectionProps) => {
 
     return (
         <>
-            <div className="border shadow-sm rounded-lg p-2 overflow-y-auto lg:max-h-[650px] md:max-h-[350px] sm:max-h-[350px]">
+            <div className="w-[600px] sm:w-full border shadow-sm rounded-lg p-2 overflow-y-auto lg:max-h-[650px] ">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="text-center md:table-cell sm:hidden">Email</TableHead>
-                            <TableHead className="text-center sm:table-cell">Rol</TableHead>
+                            <TableHead className="text-center">Email</TableHead>
+                            <TableHead className="text-center">Rol</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {users.map(user => (
                             <TableRow key={user._id}>
-                                <TableCell className='text-center md:table-cell sm:hidden'>{user.email}</TableCell>
+                                <TableCell className='text-center md:table-cell'>{user.email}</TableCell>
                                 <TableCell className="text-right sm:table-cell">
                                     <div className="flex justify-center">
                                         <Select

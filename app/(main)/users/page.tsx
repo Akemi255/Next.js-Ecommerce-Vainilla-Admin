@@ -27,10 +27,7 @@ export default async function UsersPage() {
         },
     });
 
-    // Enviar los usuarios como prop a RolesSection
     return (
-        <div>
-            <RolesSection email={userEmail} users={users} />
-        </div>
+        <RolesSection email={userEmail} users={users} />
     );
 }
