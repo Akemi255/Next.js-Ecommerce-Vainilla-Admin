@@ -7,6 +7,7 @@ import { signInSchema, signUpSchema } from "@/lib/zod";
 import { unknown, z } from "zod";
 import { isBefore } from "date-fns";
 import { deleteVerificationToken } from "@/utils/password";
+import { sendVerificationEmail } from "./email-actions";
 
 const passwordSchema = z
   .object({
@@ -48,7 +49,7 @@ export const registerAction = async (values: z.infer<typeof signUpSchema>) => {
       return { error: "Invalid data" };
     }
 
-    //verificar si el usuario ya existe
+    // Verificar si el usuario ya existe
     const user = await prismadb.user.findUnique({
       where: {
         email: data.email,
@@ -56,17 +57,24 @@ export const registerAction = async (values: z.infer<typeof signUpSchema>) => {
     });
 
     if (user) {
-      return { error: "User already exist" };
+      return { error: "User already exists" };
     } else {
       const hashpassword = await bcrypt.hash(data.password, 10);
 
-      //crear usuario
+      // Crear usuario
       await prismadb.user.create({
         data: {
           email: data.email,
           password: hashpassword,
         },
       });
+
+      // Enviar el correo de verificación
+      const emailResult = await sendVerificationEmail(data.email);
+
+      if (emailResult?.error) {
+        return { error: emailResult.error };
+      }
 
       const result = await signIn("credentials", {
         email: data.email,
@@ -175,6 +183,15 @@ export const updatePassword = async (
     const updatedUser = await prismadb.user.update({
       where: { email },
       data: { password: hashedPassword },
+    });
+
+    await prismadb.verificationPasswordToken.delete({
+      where: {
+        identifier_token: {
+          identifier: email,
+          token: searchParamsToken,
+        },
+      },
     });
 
     if (updatedUser) {

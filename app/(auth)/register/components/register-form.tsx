@@ -37,15 +37,20 @@ export default function RegisterForm() {
     });
 
     const onSubmit = async (values: SignUpValues) => {
+
         startTransition(async () => {
-            const result = await registerAction(values);
-            if (result?.error) {
-                console.log(result.error);
-                toast.error("Ups... ha ocurrido un error");
-            } else {
-                toast.success("Usuario creado con éxito!");
-                await sendVerificationEmail(values.email);
-                setMessage(true);
+            try {
+                const result = await registerAction(values);
+                if (result?.error) {
+                    console.log(result.error);
+                    toast.error("Ups... ha ocurrido un error");
+                } else if (result && values.email) {
+                    toast.success("Usuario creado con éxito!");
+                    setMessage(true);
+                }
+            } catch (error) {
+                console.error("Error fetching:", error);
+                toast.error("Error de conexión. Por favor, intenta de nuevo.");
             }
         });
     };
