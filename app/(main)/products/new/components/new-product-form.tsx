@@ -28,7 +28,7 @@ export const productSchema = z.object({
     description: z.string().min(1, { message: 'Description is required.' }),
     price: z.coerce.number().min(1, { message: 'Price must be at least 1.' }),
     stock: z.number().min(0, { message: 'Stock cannot be negative.' }),
-    imageUrl: z.string().url({ message: 'Invalid URL.' }),
+    images: z.array(z.string().url({ message: 'Invalid URL.' })).nonempty({ message: 'At least one image is required.' }),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -44,7 +44,7 @@ export default function EditProductForm() {
             description: "",
             price: 0,
             stock: 0,
-            imageUrl: "",
+            images: [],
         },
     });
 
@@ -52,7 +52,7 @@ export default function EditProductForm() {
         try {
             setLoading(true);
             await axios.post(`/api/products`, values);
-            router.push(`/`);
+            router.push(`/products`);
             router.refresh();
             toast.success("Producto creado correctamente");
         } catch (error: any) {
@@ -62,8 +62,9 @@ export default function EditProductForm() {
         }
     };
 
-    const handleImageUpload = (url: string) => {
-        form.setValue("imageUrl", url);
+    const handleImageUpload = (urls: string[]) => {
+        const validUrls: [string, ...string[]] = urls.length > 0 ? urls as [string, ...string[]] : ["default-image-url"];
+        form.setValue("images", validUrls);
     };
 
     return (
@@ -88,11 +89,11 @@ export default function EditProductForm() {
 
                     <FormField
                         control={form.control}
-                        name="imageUrl"
+                        name="images"
                         render={() => (
                             <FormItem>
-                                <FormLabel>Image</FormLabel>
-                                <UploadImage onUpload={handleImageUpload} />
+                                <FormLabel>Images</FormLabel>
+                                <UploadImage onUpload={handleImageUpload} imageUrls={form.getValues("images")} />
                                 <FormMessage />
                             </FormItem>
                         )}

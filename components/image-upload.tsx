@@ -1,26 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CldUploadWidget } from "next-cloudinary";
 import Image from "next/image";
+import { Trash } from "lucide-react";
 
 interface UploadImageProps {
-  onUpload: (url: string) => void;
-  imageUrl?: string;
+  onUpload: (urls: string[]) => void;
+  imageUrls?: string[];
 }
 
-export default function UploadImage({ onUpload, imageUrl }: UploadImageProps) {
-  const [ImageUrl, setImageUrl] = useState(imageUrl || "");
+export default function UploadImage({ onUpload, imageUrls = [] }: UploadImageProps) {
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>(imageUrls);
 
   const handleUpload = (result: any) => {
     if (result.event === "success") {
       const url = result.info.secure_url;
-      setImageUrl(url);
-      if (onUpload) {
-        onUpload(url);
-      }
+      // Añadir la nueva imagen al array existente
+      setUploadedImageUrls((prevUrls) => {
+        const updatedUrls = [...prevUrls, url];
+        if (onUpload) {
+          onUpload(updatedUrls);
+        }
+        return updatedUrls;
+      });
     }
+  };
+
+  const handleRemove = (url: string) => {
+    // Filtrar el array para eliminar la URL seleccionada
+    const updatedUrls = uploadedImageUrls.filter((imgUrl) => imgUrl !== url);
+    setUploadedImageUrls(updatedUrls);
+    onUpload(updatedUrls); // Actualizar la lista de URLs en el componente padre
   };
 
   return (
@@ -36,15 +48,24 @@ export default function UploadImage({ onUpload, imageUrl }: UploadImageProps) {
         )}
       </CldUploadWidget>
 
-      {(ImageUrl || imageUrl) && (
-        <div className="mt-4">
-          <Image
-            width={200}
-            height={200}
-            src={ImageUrl}
-            alt="Uploaded Image"
-            className="max-w-full h-auto"
-          />
+      {uploadedImageUrls.length > 0 && (
+        <div className="mt-4 flex flex-row flex-wrap gap-4">
+          {uploadedImageUrls.map((url) => (
+            <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
+              <div className="z-10 absolute top-2 right-2">
+                <Button type="button" onClick={() => handleRemove(url)} variant="destructive" size="icon">
+                  <Trash className="h-4 w-4" />
+                </Button>
+              </div>
+              <Image
+                fill
+                className="object-cover"
+                alt="Image"
+                src={url}
+                sizes="200px"
+              />
+            </div>
+          ))}
         </div>
       )}
     </div>

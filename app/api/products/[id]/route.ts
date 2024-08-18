@@ -31,22 +31,23 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    const { name, description, price, stock, imageUrl } = body;
+    // Extracting the array of image URLs instead of a single image
+    const { name, description, price, stock, images } = body;
 
     if (!params.id) {
       return new NextResponse("Product id is required", { status: 400 });
     }
 
-    // Validaciones
+    // Validations
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!imageUrl) {
-      return new NextResponse("Image is required", { status: 400 });
+    if (!images || images.length === 0) {
+      return new NextResponse("At least one image is required", {
+        status: 400,
+      });
     }
-
-    const image = imageUrl;
 
     if (!price) {
       return new NextResponse("Price is required", { status: 400 });
@@ -56,10 +57,11 @@ export async function PATCH(
       return new NextResponse("Description is required", { status: 400 });
     }
 
-    if (!stock) {
+    if (stock === undefined) {
       return new NextResponse("Stock is required", { status: 400 });
     }
 
+    // Update the product with the array of images
     await prismadb.product.update({
       where: {
         id: params.id,
@@ -67,14 +69,17 @@ export async function PATCH(
       data: {
         name,
         description,
-        image,
+        images: {
+          deleteMany: {},
+          create: images.map((url: string) => ({ url })),
+        },
         price,
         stock,
       },
     });
 
     revalidatePath("/products");
-    return NextResponse.json("Producto actualizado");
+    return NextResponse.json("Product updated successfully");
   } catch (error) {
     console.log("[PRODUCT_PATCH]", error);
     return new NextResponse("Internal error", { status: 500 });

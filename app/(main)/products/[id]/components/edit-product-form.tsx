@@ -28,7 +28,7 @@ export const productSchema = z.object({
     description: z.string().min(1, { message: 'Description is required.' }),
     price: z.coerce.number().min(1, { message: 'Price must be at least 1.' }),
     stock: z.number().min(0, { message: 'Stock cannot be negative.' }),
-    imageUrl: z.string().url({ message: 'Invalid URL.' }),
+    images: z.array(z.string().url()).nonempty({ message: 'At least one image URL is required.' }),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -44,7 +44,7 @@ export default function EditProductForm({ data }: any) {
             description: data?.description || "",
             price: data?.price || 0,
             stock: data?.stock || 0,
-            imageUrl: data?.image || "",
+            images: data?.images?.map((img: any) => img.url) || [],
         },
     });
 
@@ -53,7 +53,7 @@ export default function EditProductForm({ data }: any) {
             setLoading(true);
             await axios.patch(`/api/products/${data.id}`, values);
             router.push(`/products`);
-            router.refresh()
+            router.refresh();
             toast.success("Producto actualizado correctamente");
         } catch (error: any) {
             toast.error('Something went wrong.');
@@ -62,8 +62,9 @@ export default function EditProductForm({ data }: any) {
         }
     };
 
-    const handleImageUpload = (url: string) => {
-        form.setValue("imageUrl", url);
+    const handleImageUpload = (urls: string[]) => {
+        const validUrls: [string, ...string[]] = urls.length > 0 ? urls as [string, ...string[]] : ["default-image-url"];
+        form.setValue("images", validUrls);
     };
 
     return (
@@ -88,13 +89,13 @@ export default function EditProductForm({ data }: any) {
 
                     <FormField
                         control={form.control}
-                        name="imageUrl"
-                        render={({ field }) => (
+                        name="images"
+                        render={() => (
                             <FormItem>
-                                <FormLabel>Image</FormLabel>
+                                <FormLabel>Images</FormLabel>
                                 <UploadImage
                                     onUpload={handleImageUpload}
-                                    imageUrl={field.value}
+                                    imageUrls={form.getValues("images")}
                                 />
                                 <FormMessage />
                             </FormItem>
@@ -128,8 +129,8 @@ export default function EditProductForm({ data }: any) {
                                         step="0.01"
                                         placeholder="20.00"
                                         {...field}
-                                        value={field.value} // Mantiene el valor del input
-                                        onChange={(e) => field.onChange(e.target.value)} // Permite decimales temporalmente
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(e.target.value)}
                                         disabled={loading}
                                     />
                                 </FormControl>
@@ -138,7 +139,6 @@ export default function EditProductForm({ data }: any) {
                             </FormItem>
                         )}
                     />
-
 
                     <FormField
                         control={form.control}

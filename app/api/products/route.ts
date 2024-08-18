@@ -6,18 +6,18 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { name, description, price, stock, imageUrl } = body;
+    const { name, description, price, stock, images } = body;
 
     // Validaciones
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!imageUrl) {
-      return new NextResponse("Image is required", { status: 400 });
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      return new NextResponse("At least one image is required", {
+        status: 400,
+      });
     }
-
-    const image = imageUrl;
 
     if (!price) {
       return new NextResponse("Price is required", { status: 400 });
@@ -36,9 +36,13 @@ export async function POST(req: Request) {
       data: {
         name,
         description,
-        image,
         price,
         stock,
+        images: {
+          create: images.map((url: string) => ({
+            url,
+          })),
+        },
       },
     });
 

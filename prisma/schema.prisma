@@ -83,12 +83,23 @@ model Product {
   id          String      @id @default(uuid())
   name        String
   description String
-  image       String
   price       Float
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   stock       Int
   OrderItem   OrderItem[]
+  images      Image[]
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
 }
 
 model Order {

@@ -11,6 +11,9 @@ export default async function ProductPage({
         where: {
             id: params.id,
         },
+        include: {
+            images: true,
+        }
     });
 
     return (
