@@ -39,7 +39,7 @@ export const sendVerificationEmail = async (email: string) => {
 
     // Enviar el correo electrónico de verificación
     const mailOptions = {
-      from: "gusvet1465@gmail.com",
+      from: process.env.GMAIL_USER,
       to: email,
       subject: "Verificación de correo electrónico",
       text: `Haz clic en el siguiente enlace para verificar tu correo electrónico: ${verificationLink}`,
@@ -89,7 +89,7 @@ export const sendPasswordResetEmail = async (email: string) => {
 
     // Opciones de correo electrónico
     const mailOptions = {
-      from: "gusvet1465@gmail.com",
+      from: process.env.GMAIL_USER,
       to: email,
       subject: "Restablecer contraseña",
       text: `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`,

@@ -15,6 +15,15 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import UploadImage from "@/components/image-upload";
@@ -29,7 +38,11 @@ export const productSchema = z.object({
     price: z.coerce.number().min(1, { message: 'Price must be at least 1.' }),
     stock: z.number().min(0, { message: 'Stock cannot be negative.' }),
     images: z.array(z.string().url({ message: 'Invalid URL.' })).nonempty({ message: 'At least one image is required.' }),
+    Category: z.enum(['Vainilla', 'Cafe', 'Cacao', 'Panama_huts', 'tagua'], {
+        required_error: 'Category is required.',
+    }),
 });
+
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
@@ -82,6 +95,33 @@ export default function EditProductForm() {
                                     <Input placeholder="Gourmet Vanilla" {...field} disabled={loading} />
                                 </FormControl>
                                 <FormDescription>Product name</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="Category"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Categories</SelectLabel>
+                                            <SelectItem value="Vainilla">Vainilla</SelectItem>
+                                            <SelectItem value="Cafe">Café</SelectItem>
+                                            <SelectItem value="Cacao">Cacao</SelectItem>
+                                            <SelectItem value="Panama_huts">Panama Hats</SelectItem>
+                                            <SelectItem value="tagua">Tagua</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                                <FormDescription>Select product category</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}

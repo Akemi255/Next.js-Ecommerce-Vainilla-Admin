@@ -1,6 +1,8 @@
+
 import { auth } from "@/auth";
 import Navbar from "@/components/navbar";
 import prismadb from "@/lib/prismadb";
+
 import { redirect } from "next/navigation";
 
 export default async function MainLayout({
@@ -24,6 +26,10 @@ export default async function MainLayout({
 
     if (!user?.emailVerified) {
         redirect("/verify-email");
+    }
+
+    if (user.role !== "admin") {
+        redirect("/no-valid")
     }
 
     return (

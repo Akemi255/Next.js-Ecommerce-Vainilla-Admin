@@ -32,7 +32,7 @@ export async function PATCH(
     const body = await req.json();
 
     // Extracting the array of image URLs instead of a single image
-    const { name, description, price, stock, images } = body;
+    const { name, description, price, stock, images, Category } = body;
 
     if (!params.id) {
       return new NextResponse("Product id is required", { status: 400 });
@@ -41,6 +41,10 @@ export async function PATCH(
     // Validations
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!Category) {
+      return new NextResponse("Category is required", { status: 400 });
     }
 
     if (!images || images.length === 0) {
@@ -61,7 +65,6 @@ export async function PATCH(
       return new NextResponse("Stock is required", { status: 400 });
     }
 
-    // Update the product with the array of images
     await prismadb.product.update({
       where: {
         id: params.id,
@@ -69,6 +72,7 @@ export async function PATCH(
       data: {
         name,
         description,
+        Category,
         images: {
           deleteMany: {},
           create: images.map((url: string) => ({ url })),

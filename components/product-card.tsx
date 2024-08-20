@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import * as React from "react";
+import { Badge } from "./ui/badge";
 
 interface ProductCardProps {
     id: string;
@@ -21,6 +22,7 @@ interface ProductCardProps {
     images: { url: string }[];
     price: number;
     stock: number;
+    category: string
 }
 
 export default function ProductCard({
@@ -30,6 +32,7 @@ export default function ProductCard({
     images,
     price,
     stock,
+    category
 }: ProductCardProps) {
     const plugin = React.useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
 
@@ -71,7 +74,7 @@ export default function ProductCard({
                     <CarouselPrevious className="bg-gray-800 hover:bg-gray-700" />
                     <CarouselNext className="bg-gray-800 hover:bg-gray-700" />
                 </Carousel>
-
+                <Badge className="w-1/4 flex justify-center">{category}</Badge>
                 <CardTitle className="text-xl font-semibold mt-2">{name}</CardTitle>
                 <CardDescription className="text-gray-600">{description}</CardDescription>
             </CardHeader>

@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { name, description, price, stock, images } = body;
+    const { name, description, price, stock, images, Category } = body;
 
     // Validaciones
     if (!name) {
@@ -31,6 +31,10 @@ export async function POST(req: Request) {
       return new NextResponse("Stock is required", { status: 400 });
     }
 
+    if (!Category) {
+      return new NextResponse("Category is required", { status: 400 });
+    }
+
     // Creación del producto en la base de datos
     const product = await prismadb.product.create({
       data: {
@@ -38,6 +42,7 @@ export async function POST(req: Request) {
         description,
         price,
         stock,
+        Category,
         images: {
           create: images.map((url: string) => ({
             url,

@@ -30,6 +30,7 @@ export default async function ProductsPage() {
                         images={product.images}
                         price={product.price}
                         stock={product.stock}
+                        category={product.Category}
                     />
                 ))}
             </div>
