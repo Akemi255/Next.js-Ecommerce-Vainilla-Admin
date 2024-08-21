@@ -31,6 +31,7 @@ import UploadImage from "@/components/image-upload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Image } from "@prisma/client";
 
 export const productSchema = z.object({
     name: z.string().min(1, { message: 'Name is required.' }),
@@ -45,9 +46,7 @@ export const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-interface Image {
-    url: string;
-}
+
 interface Product {
     id: string;
     name: string;
@@ -57,7 +56,7 @@ interface Product {
     updatedAt: Date;
     stock: number;
     Category: string;
-    images: Image[];
+    images: Image[]
 }
 interface EditProductFormProps {
     data: Product;

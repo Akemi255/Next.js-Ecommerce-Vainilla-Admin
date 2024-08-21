@@ -16,6 +16,14 @@ export default async function ProductPage({
         }
     });
 
+    if (!product) {
+        return (
+            <div>
+                <p>Product not found</p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <EditProductForm data={product} />

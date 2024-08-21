@@ -6,9 +6,14 @@ import { Button } from "@/components/ui/button";
 import { sendVerificationEmail } from "@/actions/email-actions";
 import toast from "react-hot-toast";
 
-export default function VerifyEmailBox({ searchParams, message }: {
-    searchParams: { token: string, email: string },
-    message: boolean
+export default function VerifyEmailBox({
+    searchParams,
+    message,
+    email
+}: {
+    searchParams: { token: string, email?: string },
+    message: boolean,
+    email: string | undefined
 }) {
 
     const router = useRouter();
@@ -26,11 +31,18 @@ export default function VerifyEmailBox({ searchParams, message }: {
         }
 
         setLoading(false);
-    }, [message]);
+    }, [message, router]);
 
     const sendEmail = async () => {
+        const emailToSend = searchParams.email || email;
+
+        if (!emailToSend) {
+            setDisplayMessage("No se proporcionó un correo electrónico.");
+            return;
+        }
+
         try {
-            await sendVerificationEmail(searchParams.email);
+            await sendVerificationEmail(emailToSend);
             setDisplayMessage("Correo de verificación enviado.");
             toast.success("Correo de verificación enviado");
         } catch (error) {
