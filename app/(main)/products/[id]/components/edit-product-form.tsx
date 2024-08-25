@@ -31,7 +31,7 @@ import UploadImage from "@/components/image-upload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Image } from "@prisma/client";
+import { Categories, Image } from "@prisma/client";
 
 export const productSchema = z.object({
     name: z.string().min(1, { message: 'Name is required.' }),
@@ -46,7 +46,6 @@ export const productSchema = z.object({
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-
 interface Product {
     id: string;
     name: string;
@@ -55,9 +54,10 @@ interface Product {
     createdAt: Date;
     updatedAt: Date;
     stock: number;
-    Category: string;
+    Category: Categories;
     images: Image[]
 }
+
 interface EditProductFormProps {
     data: Product;
 }
@@ -74,6 +74,7 @@ export default function EditProductForm({ data }: EditProductFormProps) {
             price: data?.price || 0,
             stock: data?.stock || 0,
             images: data?.images?.map((img: any) => img.url) || [],
+            Category: data?.Category || "Vainilla",
         },
     });
 
@@ -122,7 +123,11 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Category</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={data.Category}>
+                                <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value} // Asegura que el valor se mantenga en el form
+                                    defaultValue={data.Category}
+                                >
                                     <SelectTrigger className="w-[180px]">
                                         <SelectValue placeholder="Select a category" />
                                     </SelectTrigger>
