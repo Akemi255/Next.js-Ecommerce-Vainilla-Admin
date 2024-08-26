@@ -31,8 +31,8 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    // Extracting the array of image URLs instead of a single image
-    const { name, description, price, stock, images, Category } = body;
+    const { name, description, price, stock, images, Category, isFeature } =
+      body;
 
     if (!params.id) {
       return new NextResponse("Product id is required", { status: 400 });
@@ -79,6 +79,7 @@ export async function PATCH(
         },
         price,
         stock,
+        isFeature,
       },
     });
 

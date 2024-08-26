@@ -6,7 +6,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { name, description, price, stock, images, Category } = body;
+    const { name, description, price, stock, images, Category, isFeature } =
+      body;
 
     // Validaciones
     if (!name) {
@@ -43,6 +44,7 @@ export async function POST(req: Request) {
         price,
         stock,
         Category,
+        isFeature,
         images: {
           create: images.map((url: string) => ({
             url,

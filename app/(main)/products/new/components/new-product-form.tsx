@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import UploadImage from "@/components/image-upload";
 
 import { useRouter } from "next/navigation";
@@ -41,8 +42,8 @@ export const productSchema = z.object({
     Category: z.enum(['Vainilla', 'Cafe', 'Cacao', 'Panama_huts', 'tagua'], {
         required_error: 'Category is required.',
     }),
+    isFeature: z.boolean().optional(),
 });
-
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
@@ -58,6 +59,7 @@ export default function EditProductForm() {
             price: 0,
             stock: 0,
             images: [],
+            isFeature: false,
         },
     });
 
@@ -96,6 +98,29 @@ export default function EditProductForm() {
                                 </FormControl>
                                 <FormDescription>Product name</FormDescription>
                                 <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="isFeature"
+                        render={({ field }) => (
+                            <FormItem className="flex items-center space-x-2">
+                                <FormControl>
+                                    <Checkbox
+                                        id="isFeature"
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        disabled={loading}
+                                    />
+                                </FormControl>
+                                <FormLabel htmlFor="isFeature" className="text-sm font-medium relative bottom-1">
+                                    Featured Product
+                                </FormLabel>
+                                <FormDescription className="relative bottom-1">
+                                    Este producto aparecerá en el inicio
+                                </FormDescription>
                             </FormItem>
                         )}
                     />
@@ -196,6 +221,8 @@ export default function EditProductForm() {
                             </FormItem>
                         )}
                     />
+
+
 
                     <div className="flex items-center justify-end">
                         <Button type="submit" disabled={loading}>

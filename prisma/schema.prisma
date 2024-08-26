@@ -95,6 +95,7 @@ model Product {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   stock       Int
+  isFeature   Boolean     @default(false)
   Category    Categories  @default(Vainilla)
   OrderItem   OrderItem[]
   images      Image[]

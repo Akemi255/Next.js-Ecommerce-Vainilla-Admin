@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import UploadImage from "@/components/image-upload";
 
 import { useRouter } from "next/navigation";
@@ -42,6 +43,7 @@ export const productSchema = z.object({
     Category: z.enum(['Vainilla', 'Cafe', 'Cacao', 'Panama_huts', 'tagua'], {
         required_error: 'Category is required.',
     }),
+    isFeature: z.boolean().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -55,7 +57,8 @@ interface Product {
     updatedAt: Date;
     stock: number;
     Category: Categories;
-    images: Image[]
+    images: Image[];
+    isFeature?: boolean;
 }
 
 interface EditProductFormProps {
@@ -75,6 +78,7 @@ export default function EditProductForm({ data }: EditProductFormProps) {
             stock: data?.stock || 0,
             images: data?.images?.map((img: any) => img.url) || [],
             Category: data?.Category || "Vainilla",
+            isFeature: data?.isFeature || false,
         },
     });
 
@@ -86,14 +90,14 @@ export default function EditProductForm({ data }: EditProductFormProps) {
             router.refresh();
             toast.success("Producto actualizado correctamente");
         } catch (error: any) {
-            toast.error('Something went wrong.');
+            toast.error("Something went wrong.");
         } finally {
             setLoading(false);
         }
     };
 
     const handleImageUpload = (urls: string[]) => {
-        const validUrls: [string, ...string[]] = urls.length > 0 ? urls as [string, ...string[]] : ["default-image-url"];
+        const validUrls: [string, ...string[]] = urls.length > 0 ? (urls as [string, ...string[]]) : ["default-image-url"];
         form.setValue("images", validUrls);
     };
 
@@ -116,7 +120,28 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                             </FormItem>
                         )}
                     />
-
+                    <FormField
+                        control={form.control}
+                        name="isFeature"
+                        render={({ field }) => (
+                            <FormItem>
+                                <div className="flex items-center space-x-2">
+                                    <FormControl>
+                                        <Checkbox
+                                            id="isFeature"
+                                            checked={field.value}
+                                            onCheckedChange={(checked) => field.onChange(checked)}
+                                            disabled={loading}
+                                        />
+                                    </FormControl>
+                                    <FormLabel htmlFor="isFeature">
+                                        Feature this product
+                                    </FormLabel>
+                                </div>
+                                <FormDescription>Este producto aparecerá en el inicio</FormDescription>
+                            </FormItem>
+                        )}
+                    />
                     <FormField
                         control={form.control}
                         name="Category"
@@ -125,7 +150,7 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                                 <FormLabel>Category</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
-                                    value={field.value} // Asegura que el valor se mantenga en el form
+                                    value={field.value}
                                     defaultValue={data.Category}
                                 >
                                     <SelectTrigger className="w-[180px]">
