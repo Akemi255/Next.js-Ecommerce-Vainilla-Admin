@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
 
@@ -32,6 +32,7 @@ import UploadImage from "@/components/image-upload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Category } from "@prisma/client";
 
 export const productSchema = z.object({
     name: z.string().min(1, { message: 'Name is required.' }),
@@ -39,15 +40,17 @@ export const productSchema = z.object({
     price: z.coerce.number().min(1, { message: 'Price must be at least 1.' }),
     stock: z.number().min(0, { message: 'Stock cannot be negative.' }),
     images: z.array(z.string().url({ message: 'Invalid URL.' })).nonempty({ message: 'At least one image is required.' }),
-    Category: z.enum(['Vainilla', 'Cafe', 'Cacao', 'Panama_huts', 'tagua'], {
-        required_error: 'Category is required.',
-    }),
+    categoryId: z.string().min(1, { message: 'Category is required.' }),
     isFeature: z.boolean().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
 
-export default function EditProductForm() {
+interface NewProductFormProps {
+    categories: Category[]
+}
+
+export default function NewProductForm({ categories }: NewProductFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
@@ -127,7 +130,7 @@ export default function EditProductForm() {
 
                     <FormField
                         control={form.control}
-                        name="Category"
+                        name="categoryId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Category</FormLabel>
@@ -138,11 +141,11 @@ export default function EditProductForm() {
                                     <SelectContent>
                                         <SelectGroup>
                                             <SelectLabel>Categories</SelectLabel>
-                                            <SelectItem value="Vainilla">Vainilla</SelectItem>
-                                            <SelectItem value="Cafe">Café</SelectItem>
-                                            <SelectItem value="Cacao">Cacao</SelectItem>
-                                            <SelectItem value="Panama_huts">Panama Hats</SelectItem>
-                                            <SelectItem value="tagua">Tagua</SelectItem>
+                                            {categories.map((category) => (
+                                                <SelectItem key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -221,8 +224,6 @@ export default function EditProductForm() {
                             </FormItem>
                         )}
                     />
-
-
 
                     <div className="flex items-center justify-end">
                         <Button type="submit" disabled={loading}>

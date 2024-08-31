@@ -32,7 +32,7 @@ import UploadImage from "@/components/image-upload";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Categories, Image } from "@prisma/client";
+import { Category, Image } from "@prisma/client";
 
 export const productSchema = z.object({
     name: z.string().min(1, { message: 'Name is required.' }),
@@ -40,9 +40,7 @@ export const productSchema = z.object({
     price: z.coerce.number().min(1, { message: 'Price must be at least 1.' }),
     stock: z.number().min(0, { message: 'Stock cannot be negative.' }),
     images: z.array(z.string().url()).nonempty({ message: 'At least one image URL is required.' }),
-    Category: z.enum(['Vainilla', 'Cafe', 'Cacao', 'Panama_huts', 'tagua'], {
-        required_error: 'Category is required.',
-    }),
+    categoryId: z.string().min(1, { message: 'Category is required.' }),
     isFeature: z.boolean().optional(),
 });
 
@@ -56,29 +54,30 @@ interface Product {
     createdAt: Date;
     updatedAt: Date;
     stock: number;
-    Category: Categories;
+    category: Category;
     images: Image[];
     isFeature?: boolean;
 }
 
 interface EditProductFormProps {
     data: Product;
+    categories: Category[];
 }
 
-export default function EditProductForm({ data }: EditProductFormProps) {
+export default function EditProductForm({ data, categories }: EditProductFormProps) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
         defaultValues: {
-            name: data?.name || "",
-            description: data?.description || "",
-            price: data?.price || 0,
-            stock: data?.stock || 0,
-            images: data?.images?.map((img: any) => img.url) || [],
-            Category: data?.Category || "Vainilla",
-            isFeature: data?.isFeature || false,
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            stock: data.stock,
+            images: data.images.map((img: any) => img.url),
+            categoryId: data.category.id,
+            isFeature: data.isFeature || false,
         },
     });
 
@@ -144,14 +143,14 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                     />
                     <FormField
                         control={form.control}
-                        name="Category"
+                        name="categoryId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Category</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
                                     value={field.value}
-                                    defaultValue={data.Category}
+                                    defaultValue={data.category.name}
                                 >
                                     <SelectTrigger className="w-[180px]">
                                         <SelectValue placeholder="Select a category" />
@@ -159,11 +158,11 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                                     <SelectContent>
                                         <SelectGroup>
                                             <SelectLabel>Categories</SelectLabel>
-                                            <SelectItem value="Vainilla">Vainilla</SelectItem>
-                                            <SelectItem value="Cafe">Café</SelectItem>
-                                            <SelectItem value="Cacao">Cacao</SelectItem>
-                                            <SelectItem value="Panama_huts">Panama Hats</SelectItem>
-                                            <SelectItem value="tagua">Tagua</SelectItem>
+                                            {categories.map((category) => (
+                                                <SelectItem key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -172,7 +171,6 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="images"
@@ -187,7 +185,6 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="description"
@@ -202,7 +199,6 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="price"
@@ -225,7 +221,6 @@ export default function EditProductForm({ data }: EditProductFormProps) {
                             </FormItem>
                         )}
                     />
-
                     <FormField
                         control={form.control}
                         name="stock"

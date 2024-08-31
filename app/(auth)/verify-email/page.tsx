@@ -11,6 +11,10 @@ export default async function VerifyEmailPage({ searchParams }: {
 
     const session = await auth();
 
+    if (!session) {
+        redirect("/login")
+    }
+
     const userEmail = session?.user?.email ?? undefined;
 
     const user = await prismadb.user.findUnique({

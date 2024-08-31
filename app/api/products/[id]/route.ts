@@ -31,7 +31,7 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    const { name, description, price, stock, images, Category, isFeature } =
+    const { name, description, price, stock, images, categoryId, isFeature } =
       body;
 
     if (!params.id) {
@@ -43,8 +43,8 @@ export async function PATCH(
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!Category) {
-      return new NextResponse("Category is required", { status: 400 });
+    if (!categoryId) {
+      return new NextResponse("categoryId is required", { status: 400 });
     }
 
     if (!images || images.length === 0) {
@@ -72,7 +72,11 @@ export async function PATCH(
       data: {
         name,
         description,
-        Category,
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
         images: {
           deleteMany: {},
           create: images.map((url: string) => ({ url })),

@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { name, description, price, stock, images, Category, isFeature } =
+    const { name, description, price, stock, images, categoryId, isFeature } =
       body;
 
     // Validaciones
@@ -28,23 +28,34 @@ export async function POST(req: Request) {
       return new NextResponse("Description is required", { status: 400 });
     }
 
-    if (!stock) {
+    if (stock === undefined) {
       return new NextResponse("Stock is required", { status: 400 });
     }
 
-    if (!Category) {
+    if (!categoryId) {
       return new NextResponse("Category is required", { status: 400 });
     }
 
-    // Creación del producto en la base de datos
+    const category = await prismadb.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      return new NextResponse("Category not found", { status: 404 });
+    }
+
     const product = await prismadb.product.create({
       data: {
         name,
         description,
         price,
         stock,
-        Category,
         isFeature,
+        category: {
+          connect: {
+            id: categoryId,
+          },
+        },
         images: {
           create: images.map((url: string) => ({
             url,

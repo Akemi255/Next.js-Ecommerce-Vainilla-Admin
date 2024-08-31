@@ -14,14 +14,6 @@ enum Role {
   admin
 }
 
-enum Categories {
-  Vainilla
-  Cafe
-  Cacao
-  Panama_huts
-  tagua
-}
-
 model User {
   id            String    @id @default(uuid())
   name          String?
@@ -96,9 +88,12 @@ model Product {
   updatedAt   DateTime    @updatedAt
   stock       Int
   isFeature   Boolean     @default(false)
-  Category    Categories  @default(Vainilla)
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
   OrderItem   OrderItem[]
   images      Image[]
+
+  @@index([categoryId])
 }
 
 model Image {
@@ -135,4 +130,12 @@ model OrderItem {
 
   @@index([orderId])
   @@index([productId])
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }

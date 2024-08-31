@@ -12,9 +12,16 @@ export default async function ProductPage({
             id: params.id,
         },
         include: {
+            category: true,
             images: true,
         }
     });
+
+    const categories = await prismadb.category.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+    })
 
     if (!product) {
         return (
@@ -26,7 +33,7 @@ export default async function ProductPage({
 
     return (
         <div>
-            <EditProductForm data={product} />
+            <EditProductForm data={product} categories={categories} />
         </div>
     );
 }

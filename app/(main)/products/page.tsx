@@ -1,14 +1,17 @@
-import prismadb from "@/lib/prismadb";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import prismadb from "@/lib/prismadb";
+
+import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/product-card";
 
 export default async function ProductsPage() {
+
     const products = await prismadb.product.findMany({
         orderBy: {
             createdAt: "desc",
         },
         include: {
+            category: true,
             images: true
         }
     });
@@ -30,7 +33,7 @@ export default async function ProductsPage() {
                         images={product.images}
                         price={product.price}
                         stock={product.stock}
-                        category={product.Category}
+                        category={product.category.name}
                     />
                 ))}
             </div>
