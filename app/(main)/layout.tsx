@@ -24,6 +24,10 @@ export default async function MainLayout({
         },
     });
 
+    if (!user) {
+        redirect("/reset")
+    }
+
     if (!user?.emailVerified) {
         redirect("/verify-email");
     }
