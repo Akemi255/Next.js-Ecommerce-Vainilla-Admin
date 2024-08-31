@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { MobileMenu } from "./mobile-menu";
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
 
@@ -37,17 +38,19 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     ]
 
     return (
-        <nav className={cn("flex items-center space-x-4 lg:space-x-6", className)}>
-            {routes.map((route) => (
-                <Link
-                    key={route.href}
-                    href={route.href}
-                    className={cn("text-sm font-medium transition-colors hover:text-primary", route.active ? "text-black dark:text-white" : "text-muted-foreground")}
-                >
-                    {route.label}
-                </Link>
-            ))}
-
-        </nav>
+        <>
+            <MobileMenu />
+            <nav className={cn("hidden md:flex items-center space-x-4 lg:space-x-6", className)}>
+                {routes.map((route) => (
+                    <Link
+                        key={route.href}
+                        href={route.href}
+                        className={cn("text-sm font-medium transition-colors hover:text-primary", route.active ? "text-black dark:text-white" : "text-muted-foreground")}
+                    >
+                        {route.label}
+                    </Link>
+                ))}
+            </nav>
+        </>
     )
 }
