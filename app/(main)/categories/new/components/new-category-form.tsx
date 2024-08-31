@@ -21,7 +21,10 @@ import {
 import { Input } from "@/components/ui/input";
 
 const categorySchema = z.object({
-    name: z.string().min(1, { message: 'El nombre es obligatorio.' }),
+    name: z.string()
+        .min(1, { message: 'El nombre es obligatorio.' })
+        .trim()
+        .regex(/^\S+$/, { message: 'El nombre no puede contener espacios.' }),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;

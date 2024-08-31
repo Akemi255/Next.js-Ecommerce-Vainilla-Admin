@@ -22,8 +22,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Category } from "@prisma/client";
 
-export const categorySchema = z.object({
-    name: z.string().min(1, { message: 'Name is required.' }),
+const categorySchema = z.object({
+    name: z.string()
+        .min(1, { message: 'El nombre es obligatorio.' })
+        .trim()
+        .regex(/^\S+$/, { message: 'El nombre no puede contener espacios.' }),
 });
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
