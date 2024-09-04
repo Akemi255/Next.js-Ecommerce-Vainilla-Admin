@@ -9,6 +9,7 @@ const publicRoutes = [
   "/verify-email",
   "/reset-password",
   "/reset-password/verify-password",
+  "/api/webhooks/stripe",
 ];
 const authRoutes = ["/login", "/register"];
 const apiAuthPrefix = "/api/auth";
