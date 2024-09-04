@@ -123,6 +123,7 @@ model Order {
 
 model OrderItem {
   id        String  @id @default(uuid())
+  quantity  Int
   orderId   String
   Order     Order   @relation(fields: [orderId], references: [id])
   productId String

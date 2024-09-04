@@ -50,6 +50,7 @@ export async function POST(req: Request) {
       },
     });
 
+    // Update stock based on the quantity purchased
     const updateStockPromises = order.orderItems.map((orderItem) =>
       prismadb.product.update({
         where: {
@@ -57,7 +58,7 @@ export async function POST(req: Request) {
         },
         data: {
           stock: {
-            decrement: 3,
+            decrement: orderItem.quantity,
           },
         },
       })
