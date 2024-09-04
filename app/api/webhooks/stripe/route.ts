@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         },
         data: {
           stock: {
-            decrement: orderItem.quantity,
+            decrement: 3,
           },
         },
       })
