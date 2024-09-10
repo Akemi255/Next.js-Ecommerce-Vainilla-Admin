@@ -44,6 +44,7 @@ export async function POST(req: Request) {
         isPaid: true,
         address: addressString,
         phone: session?.customer_details?.phone || "",
+        email: session?.customer_details?.email || "",
       },
       include: {
         orderItems: true,
