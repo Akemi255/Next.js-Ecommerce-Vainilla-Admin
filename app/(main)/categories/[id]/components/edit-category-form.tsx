@@ -26,8 +26,10 @@ const categorySchema = z.object({
     name: z.string()
         .min(1, { message: 'El nombre es obligatorio.' })
         .trim()
-        .regex(/^\S+$/, { message: 'El nombre no puede contener espacios.' }),
+        .regex(/^\S+$/, { message: 'El nombre no puede contener espacios.' })
+        .regex(/^[a-zA-Z0-9\s]+$/, { message: 'El nombre no puede contener tildes ni caracteres especiales.' }),
 });
+
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
