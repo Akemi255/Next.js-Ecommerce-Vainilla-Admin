@@ -1,9 +1,8 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 // Logica para manejar password
-import { getUserFromDb, saltAndHashPassword } from "@/utils/password";
+import { getUserFromDb, saltAndHashPassword } from "@/lib/password";
 import { signInSchema } from "./lib/zod";
-import { ZodError } from "zod";
 
 export default {
   providers: [
@@ -17,11 +16,8 @@ export default {
       authorize: async (credentials) => {
         const { email, password } = await signInSchema.parseAsync(credentials);
 
-        // logic to salt and hash password
-        const pwHash = saltAndHashPassword(password);
-
         // logic to verify if the user exists
-        const user = await getUserFromDb(email, pwHash);
+        const user = await getUserFromDb(email, password);
 
         if (!user) {
           // No user found, so this is their first attempt to login

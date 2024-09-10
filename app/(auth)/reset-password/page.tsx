@@ -36,8 +36,8 @@ export default function ResetPasswordPage() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96 text-center">
+        <div className="flex flex-col items-center justify-center h-screen">
+            <div className="p-8 rounded-lg shadow-md w-96 text-center">
                 <h1 className="text-2xl font-semibold mb-4">Restablecer Contraseña</h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

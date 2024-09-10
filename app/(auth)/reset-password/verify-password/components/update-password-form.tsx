@@ -64,8 +64,8 @@ export default function UpdatePasswordForm({ email, searchParamsToken }: UpdateP
 
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96 text-center">
+        <div className="flex flex-col items-center justify-center h-screen">
+            <div className="p-8 rounded-lg shadow-md w-96 text-center">
                 <h1 className="text-2xl font-semibold mb-4">Actualizar Contraseña</h1>
                 <>
                     <p className={`mb-6 ${message?.includes("Error") ? "text-red-500" : "text-green-500"}`}>

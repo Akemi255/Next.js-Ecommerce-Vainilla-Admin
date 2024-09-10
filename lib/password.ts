@@ -25,7 +25,7 @@ export const getUserFromDb = async (email: any, password: any) => {
     }
 
     // Verificar la contraseña (compara la contraseña en texto plano con la almacenada hasheada)
-    const isPasswordValid = bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return null;
