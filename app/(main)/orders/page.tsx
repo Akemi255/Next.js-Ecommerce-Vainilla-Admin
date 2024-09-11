@@ -32,7 +32,7 @@ export default async function OrdersPage() {
         }, 0)),
         isPaid: item.isPaid,
         createdAt: format(item.createdAt, 'MMMM do, yyyy'),
-        email: item.User?.email
+        email: item.email
     }));
 
     return (
