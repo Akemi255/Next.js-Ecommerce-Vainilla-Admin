@@ -11,11 +11,19 @@ export async function DELETE(
       return new NextResponse("Product id is required", { status: 400 });
     }
 
+    // Eliminar los OrderItems relacionados antes de eliminar el producto
+    await prismadb.orderItem.deleteMany({
+      where: {
+        productId: params.id,
+      },
+    });
+
     const product = await prismadb.product.delete({
       where: {
         id: params.id,
       },
     });
+
     revalidatePath("/products");
     return NextResponse.json(product);
   } catch (error) {
