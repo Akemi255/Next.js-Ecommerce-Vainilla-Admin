@@ -1,13 +1,14 @@
+import React from "react";
 import {
     Bar,
     BarChart,
     Rectangle,
     XAxis,
-} from "recharts"
+} from "recharts";
 
 import {
     ChartContainer,
-} from "@/components//ui/chart"
+} from "@/components//ui/chart";
 
 import {
     Card,
@@ -15,28 +16,49 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components//ui/card"
+} from "@/components//ui/card";
+import { Order } from "@prisma/client";
 
-const SalesBarChart = () => {
+interface SalesBarProps {
+    orders: Order[];
+}
+
+const processSalesData = (orders: Order[]) => {
+    const salesByDate: { [key: string]: number } = {};
+
+    orders.forEach(order => {
+        const date = new Date(order.createdAt).toISOString().split("T")[0];
+        // se cuenta la cantidad de órdenes pagadas por día.
+        salesByDate[date] = (salesByDate[date] || 0) + 1;
+    });
+
+    // Convertir el objeto en un array de objetos para el gráfico
+    return Object.entries(salesByDate).map(([date, sales]) => ({ date, sales }));
+};
+
+const SalesBarChart = ({ orders }: SalesBarProps) => {
+
+    const salesData = processSalesData(orders);
+
     return (
         <Card className="max-w-xs" x-chunk="charts-01-chunk-3">
             <CardHeader className="p-4 pb-0">
                 <CardTitle>Ventas Diarias Promedio</CardTitle>
                 <CardDescription>
-                    En los últimos 7 días, tus ventas diarias promediaron $12,500.
+                    En los últimos 7 días, tus ventas diarias han sido:
                 </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
                 <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
-                    $12,500
+                    {salesData.length}
                     <span className="text-sm font-normal text-muted-foreground">
-                        por día
+                        órdenes
                     </span>
                 </div>
                 <ChartContainer
                     config={{
                         sales: {
-                            label: "Ventas",
+                            label: "Órdenes",
                             color: "hsl(var(--chart-1))",
                         },
                     }}
@@ -50,36 +72,7 @@ const SalesBarChart = () => {
                             top: 0,
                             bottom: 0,
                         }}
-                        data={[
-                            {
-                                date: "2024-01-01",
-                                sales: 2000,
-                            },
-                            {
-                                date: "2024-01-02",
-                                sales: 2100,
-                            },
-                            {
-                                date: "2024-01-03",
-                                sales: 2200,
-                            },
-                            {
-                                date: "2024-01-04",
-                                sales: 1300,
-                            },
-                            {
-                                date: "2024-01-05",
-                                sales: 1400,
-                            },
-                            {
-                                date: "2024-01-06",
-                                sales: 2500,
-                            },
-                            {
-                                date: "2024-01-07",
-                                sales: 1600,
-                            },
-                        ]}
+                        data={salesData}
                     >
                         <Bar
                             dataKey="sales"
