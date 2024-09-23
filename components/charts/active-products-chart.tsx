@@ -15,7 +15,7 @@ export default function ActiveProductsChart({ products }: ActiveProductsProps) {
     const totalStock = products.reduce((acc, product) => acc + product.stock, 0);
 
     return (
-        <Card className="max-w-xs" x-chunk="charts-01-chunk-5">
+        <Card className="max-w-xs border-none" x-chunk="charts-01-chunk-5">
             <CardContent className="flex gap-4 p-4">
                 <div className="grid items-center gap-2">
                     <div className="grid flex-1 auto-rows-min gap-0.5">
