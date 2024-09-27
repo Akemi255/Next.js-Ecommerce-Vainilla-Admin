@@ -34,7 +34,13 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
             href: `/categories`,
             label: "Categorías",
             active: pathname === `/categories`
-        }
+        },
+        {
+            href: `/about`,
+            label: "About Section",
+            active: pathname === `/about`
+        },
+
     ]
 
     return (

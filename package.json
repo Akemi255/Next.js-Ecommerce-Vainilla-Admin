@@ -11,6 +11,8 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.2",
     "@hookform/resolvers": "^3.9.0",
+    "@lexical/react": "^0.18.0",
+    "@lexical/rich-text": "^0.18.0",
     "@prisma/client": "^5.18.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -29,6 +31,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-autoplay": "^8.1.8",
     "embla-carousel-react": "^8.1.8",
+    "lexical": "^0.18.0",
     "lucide-react": "^0.424.0",
     "nanoid": "^5.0.7",
     "next": "14.2.5",
