@@ -1,158 +1,113 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Bold, Italic, Underline, List, ListOrdered, Heading1, Heading2, Heading3, Palette } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import ToolbarPlugin from "@/plugins/toolbar-plugin";
+import EditorTheme from "@/theme/editor-theme";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
+import { OnChangePlugin } from "@/plugins/onChange-plugin";
+import axios from "axios";
+import { LexicalEditor } from "lexical";
+import { About } from "@prisma/client";
 
-export default function Editor() {
-    const [text, setText] = useState("")
-    const [selection, setSelection] = useState({ start: 0, end: 0 })
-    const [textColor, setTextColor] = useState("#000000")
+const editorConfig = {
+    namespace: "MyEditor",
+    theme: EditorTheme,
+    onError(error: Error) {
+        console.error(error);
+    },
+};
 
-    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setText(e.target.value)
+interface EditorProps {
+    initialData?: About
+}
+
+export default function Editor({ initialData }: EditorProps) {
+    const [editorState, setEditorState] = useState<LexicalEditor | null>(null);
+    const [loading, setloading] = useState(false);
+
+    // Función que se llama cuando el editor cambia
+    function onChange(editorState: LexicalEditor) {
+        setEditorState(editorState);
     }
 
-    const handleSelect = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
-        const target = e.target as HTMLTextAreaElement
-        setSelection({ start: target.selectionStart, end: target.selectionEnd })
-    }
+    // Función para obtener el texto normal del estado del editor
+    const getPlainText = (editorState: any): string => {
+        const json = editorState.toJSON();
+        const extractText = (node: any): string => {
+            let text = '';
+            if (node.children) {
+                node.children.forEach((child: any) => {
+                    text += extractText(child);
+                });
+            }
+            if (node.type === 'text' && node.text) {
+                text += node.text;
+            }
+            return text;
+        };
+        return extractText(json.root);
+    };
 
-    const applyFormatting = (format: string) => {
-        const before = text.substring(0, selection.start)
-        const selected = text.substring(selection.start, selection.end)
-        const after = text.substring(selection.end)
+    // Función para guardar el contenido
+    const handleSave = async () => {
+        if (editorState) {
+            try {
+                setloading(true)
+                const plainText = getPlainText(editorState);
+                const response = await axios.post('/api/about', {
+                    text: plainText,
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-        let formattedText = ""
-        switch (format) {
-            case "bold":
-                formattedText = `${before}**${selected}**${after}`
-                break
-            case "italic":
-                formattedText = `${before}*${selected}*${after}`
-                break
-            case "underline":
-                formattedText = `${before}_${selected}_${after}`
-                break
-            case "bullet-list":
-                formattedText = `${before}\n- ${selected}${after}`
-                break
-            case "numbered-list":
-                formattedText = `${before}\n1. ${selected}${after}`
-                break
-            case "h1":
-                formattedText = `${before}\n# ${selected}${after}`
-                break
-            case "h2":
-                formattedText = `${before}\n## ${selected}${after}`
-                break
-            case "h3":
-                formattedText = `${before}\n### ${selected}${after}`
-                break
-            default:
-                formattedText = text
+                if (response.status === 200) {
+                    toast.success('Contenido guardado');
+                } else {
+                    throw new Error('Error al guardar el contenido');
+                }
+            } catch (error) {
+                toast.error('Ups... algo salió mal');
+                console.error(error);
+            }
+            finally {
+                setloading(false)
+            }
+        } else {
+            toast.error('No hay contenido para guardar');
         }
-
-        setText(formattedText)
-    }
-
-    const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTextColor(e.target.value)
-        const colorCode = e.target.value.slice(1)
-        applyFormatting(`color-${colorCode}`)
-    }
+    };
 
     return (
-        <div className="max-w-2xl mx-auto p-4 space-y-4">
-            <div className="flex flex-wrap gap-2">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => applyFormatting("bold")}
-                    aria-label="Bold"
-                >
-                    <Bold className="h-4 w-4" />
-                </Button>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => applyFormatting("italic")}
-                    aria-label="Italic"
-                >
-                    <Italic className="h-4 w-4" />
-                </Button>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => applyFormatting("underline")}
-                    aria-label="Underline"
-                >
-                    <Underline className="h-4 w-4" />
-                </Button>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => applyFormatting("bullet-list")}
-                    aria-label="Bullet List"
-                >
-                    <List className="h-4 w-4" />
-                </Button>
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => applyFormatting("numbered-list")}
-                    aria-label="Numbered List"
-                >
-                    <ListOrdered className="h-4 w-4" />
-                </Button>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon" aria-label="Headings">
-                            <Heading1 className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => applyFormatting("h1")}>
-                            <Heading1 className="h-4 w-4 mr-2" /> Heading 1
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => applyFormatting("h2")}>
-                            <Heading2 className="h-4 w-4 mr-2" /> Heading 2
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => applyFormatting("h3")}>
-                            <Heading3 className="h-4 w-4 mr-2" /> Heading 3
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <div className="relative">
-                    <input
-                        type="color"
-                        value={textColor}
-                        onChange={handleColorChange}
-                        className="sr-only"
-                        id="text-color"
-                    />
-                    <label htmlFor="text-color" className="cursor-pointer">
-                        <Button variant="outline" size="icon" aria-label="Text Color">
-                            <Palette className="h-4 w-4" />
-                        </Button>
-                    </label>
+        <>
+            <LexicalComposer initialConfig={editorConfig}>
+                <h1 className='text-center text-[30px] font-bold mt-3'>Texto de la sección</h1>
+                <div className="editor-container rounded-lg shadow-sm p-4">
+                    <ToolbarPlugin />
+                    <div className="editor-inner">
+                        <RichTextPlugin
+                            placeholder={<span className="editor-placeholder">Escribe aquí...</span>}
+                            contentEditable={<ContentEditable className="editor-input p-1 border rounded-lg" />}
+                            ErrorBoundary={LexicalErrorBoundary}
+
+                        />
+                        <HistoryPlugin />
+                        <AutoFocusPlugin />
+                        <OnChangePlugin onChange={onChange} />
+                    </div>
                 </div>
+            </LexicalComposer>
+            <div className="flex justify-center">
+                <Button onClick={handleSave} disabled={loading}>Guardar</Button>
             </div>
-            <Textarea
-                value={text}
-                onChange={handleTextChange}
-                onSelect={handleSelect}
-                placeholder="Escribe aquí"
-                className="min-h-[300px] text-lg leading-relaxed resize-y"
-                aria-label="Text editor content"
-            />
-        </div>
-    )
+        </>
+    );
 }

@@ -2,8 +2,13 @@
 import { useState } from 'react';
 import UploadImage from './about-image-uploaded';
 import Editor from './editor';
+import { About } from '@prisma/client';
 
-export default function AboutUsSection() {
+interface AboutUsSectionProps {
+    initialData?: About
+}
+
+export default function AboutUsSection({ initialData }: AboutUsSectionProps) {
 
     const [imageUrls, setImageUrls] = useState<string[]>([]);
 
@@ -11,13 +16,13 @@ export default function AboutUsSection() {
         setImageUrls(urls);
 
         //solicitud a la api
+
     };
 
     return (
         <>
-            <h1 className='text-center text-[30px] font-bold'>Texto de about</h1>
-            <Editor />
-            <h1 className='text-center text-xl font-bold'>Imágenes de la sección</h1>
+            <Editor initialData={initialData} />
+            <h1 className='text-center text-xl font-bold mt-6'>Imágenes de la sección</h1>
             <div className='flex justify-center items-center mt-4'>
                 <UploadImage onUpload={handleUpload} imageUrls={imageUrls} />
             </div>

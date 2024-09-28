@@ -1,10 +1,17 @@
-import AboutUsSection from "./components/about-us-section"
+import prismadb from "@/lib/prismadb";
+import AboutUsSection from "./components/about-us-section";
 
-export default function AboutPage() {
+import "./editor.css";
+
+export default async function AboutPage() {
+
+    const aboutText = await prismadb.about.findFirst();
+
+    const initialData = aboutText || undefined;
 
     return (
         <div>
-            <AboutUsSection />
+            <AboutUsSection initialData={initialData} />
         </div>
     );
 }

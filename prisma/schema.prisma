@@ -141,3 +141,22 @@ model Category {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
+
+model About {
+  id        String       @id @default(uuid())
+  text      String       @db.Text
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  images    AboutImage[]
+}
+
+model AboutImage {
+  id        String   @id @default(uuid())
+  AboutId   String
+  About     About    @relation(fields: [AboutId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([AboutId])
+}

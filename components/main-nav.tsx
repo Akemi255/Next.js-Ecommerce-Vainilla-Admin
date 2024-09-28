@@ -9,7 +9,6 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
 
     const pathname = usePathname();
 
-
     const routes = [
         {
             href: `/`,
@@ -37,7 +36,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
         },
         {
             href: `/about`,
-            label: "About Section",
+            label: "About",
             active: pathname === `/about`
         },
 
