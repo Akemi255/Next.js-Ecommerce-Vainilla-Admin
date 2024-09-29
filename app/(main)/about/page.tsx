@@ -5,13 +5,15 @@ import "./editor.css";
 
 export default async function AboutPage() {
 
-    const aboutText = await prismadb.about.findFirst();
+    const aboutText = await prismadb.about.findFirst({ include: { images: true } });
 
     const initialData = aboutText || undefined;
 
+    const urls = initialData?.images.map((image) => image.url);
+
     return (
         <div>
-            <AboutUsSection initialData={initialData} />
+            <AboutUsSection initialData={initialData} images={urls} />
         </div>
     );
 }

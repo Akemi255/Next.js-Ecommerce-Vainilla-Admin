@@ -1,20 +1,23 @@
 "use client";
 
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+import { LexicalEditor } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+
 import ToolbarPlugin from "@/plugins/toolbar-plugin";
 import EditorTheme from "@/theme/editor-theme";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
 import { OnChangePlugin } from "@/plugins/onChange-plugin";
-import axios from "axios";
-import { LexicalEditor } from "lexical";
 import { About } from "@prisma/client";
+
+import { Button } from "@/components/ui/button";
 
 const editorConfig = {
     namespace: "MyEditor",
@@ -31,6 +34,7 @@ interface EditorProps {
 export default function Editor({ initialData }: EditorProps) {
     const [editorState, setEditorState] = useState<LexicalEditor | null>(null);
     const [loading, setloading] = useState(false);
+
 
     // Función que se llama cuando el editor cambia
     function onChange(editorState: LexicalEditor) {
@@ -94,10 +98,9 @@ export default function Editor({ initialData }: EditorProps) {
                     <ToolbarPlugin />
                     <div className="editor-inner">
                         <RichTextPlugin
-                            placeholder={<span className="editor-placeholder">Escribe aquí...</span>}
+                            placeholder={<span className="editor-placeholder">{initialData?.text || "Escribe aquí"}</span>}
                             contentEditable={<ContentEditable className="editor-input p-1 border rounded-lg" />}
                             ErrorBoundary={LexicalErrorBoundary}
-
                         />
                         <HistoryPlugin />
                         <AutoFocusPlugin />
@@ -106,7 +109,7 @@ export default function Editor({ initialData }: EditorProps) {
                 </div>
             </LexicalComposer>
             <div className="flex justify-center">
-                <Button onClick={handleSave} disabled={loading}>Guardar</Button>
+                <Button onClick={handleSave} disabled={loading}>Actualizar cambios</Button>
             </div>
         </>
     );

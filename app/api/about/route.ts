@@ -31,3 +31,49 @@ export async function POST(req: Request) {
     return new NextResponse("Internal error", { status: 500 });
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { imageUrls } = body;
+
+    if (!imageUrls || imageUrls.length === 0) {
+      return new NextResponse("ImageUrls is required", { status: 400 });
+    }
+
+    let about = await prismadb.about.findFirst({
+      include: { images: true },
+    });
+
+    if (!about) {
+      about = await prismadb.about.create({
+        data: {
+          images: {
+            create: imageUrls.map((url: string) => ({
+              url,
+            })),
+          },
+        },
+        include: { images: true },
+      });
+    } else {
+      about = await prismadb.about.update({
+        where: { id: about.id },
+        data: {
+          images: {
+            deleteMany: {},
+            create: imageUrls.map((url: string) => ({
+              url,
+            })),
+          },
+        },
+        include: { images: true },
+      });
+    }
+
+    return NextResponse.json(about);
+  } catch (error) {
+    console.error("[IMAGE_PATCH]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}

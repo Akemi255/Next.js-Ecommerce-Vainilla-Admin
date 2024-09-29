@@ -29,24 +29,25 @@ export default function UploadImage({ onUpload, imageUrls = [] }: UploadImagePro
     };
 
     const handleRemove = (url: string) => {
-        // Filtrar el array para eliminar la URL seleccionada
         const updatedUrls = uploadedImageUrls.filter((imgUrl) => imgUrl !== url);
         setUploadedImageUrls(updatedUrls);
-        onUpload(updatedUrls); // Actualizar la lista de URLs en el componente padre
+        onUpload(updatedUrls);
     };
 
     return (
         <div>
-            <CldUploadWidget
-                uploadPreset="axupload"
-                onSuccess={handleUpload}
-            >
-                {({ open }) => (
-                    <Button type="button" onClick={() => open()}>
-                        Upload Image
-                    </Button>
-                )}
-            </CldUploadWidget>
+            <div className="flex justify-center items-center">
+                <CldUploadWidget
+                    uploadPreset="axupload"
+                    onSuccess={handleUpload}
+                >
+                    {({ open }) => (
+                        <Button type="button" onClick={() => open()}>
+                            Subir imagen
+                        </Button>
+                    )}
+                </CldUploadWidget>
+            </div>
 
             {uploadedImageUrls.length > 0 && (
                 <div className="mt-4 flex flex-row flex-wrap gap-4">

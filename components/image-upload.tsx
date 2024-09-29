@@ -43,7 +43,7 @@ export default function UploadImage({ onUpload, imageUrls = [] }: UploadImagePro
       >
         {({ open }) => (
           <Button type="button" onClick={() => open()}>
-            Upload Image
+            Subir imagen
           </Button>
         )}
       </CldUploadWidget>
