@@ -160,3 +160,22 @@ model AboutImage {
 
   @@index([AboutId])
 }
+
+model OurHistory {
+  id        String            @id @default(uuid())
+  text      String?           @db.Text
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  images    OurHistoryImage[]
+}
+
+model OurHistoryImage {
+  id           String     @id @default(uuid())
+  OurHistoryId String
+  OurHistory   OurHistory @relation(fields: [OurHistoryId], references: [id], onDelete: Cascade)
+  url          String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([OurHistoryId])
+}
