@@ -3,8 +3,15 @@ import { signOut } from "next-auth/react";
 
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
+import LearningToggle from "./learning-toggle";
+import { LearningCategory } from "@prisma/client";
 
-export default function RightButtons({ email }: { email: string }) {
+interface RightButtonsProps {
+    email: string
+    learningCategories: LearningCategory[]
+}
+
+export default function RightButtons({ email, learningCategories }: RightButtonsProps) {
 
     const logout = async () => {
         await signOut({
@@ -14,6 +21,7 @@ export default function RightButtons({ email }: { email: string }) {
 
     return (
         <>
+            <LearningToggle learningCategories={learningCategories} />
             <ModeToggle />
             <Button onClick={logout}>Cerrar sesión</Button>
         </>

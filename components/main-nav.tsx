@@ -41,7 +41,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
         },
         {
             href: `/our-history`,
-            label: "our-history",
+            label: "history",
             active: pathname === `/our-history`
         },
     ]

@@ -179,3 +179,23 @@ model OurHistoryImage {
 
   @@index([OurHistoryId])
 }
+
+model LearningCategory {
+  id        String          @id @default(uuid())
+  name      String          @unique
+  text      String?         @db.Text
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  images    LearningImage[]
+}
+
+model LearningImage {
+  id         String           @id @default(uuid())
+  learningId String
+  learning   LearningCategory @relation(fields: [learningId], references: [id], onDelete: Cascade)
+  url        String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([learningId])
+}
