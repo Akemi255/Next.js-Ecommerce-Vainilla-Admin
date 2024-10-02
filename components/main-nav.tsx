@@ -12,7 +12,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     const routes = [
         {
             href: `/`,
-            label: "Overview",
+            label: "Inicio",
             active: pathname === `/`
         },
         {
@@ -42,6 +42,11 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
         {
             href: `/our-history`,
             label: "history",
+            active: pathname === `/our-history`
+        },
+        {
+            href: `/policies`,
+            label: "policies",
             active: pathname === `/our-history`
         },
     ]

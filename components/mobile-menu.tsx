@@ -19,7 +19,7 @@ export function MobileMenu() {
     const routes = [
         {
             href: `/`,
-            label: "Overview",
+            label: "Inicio",
             active: pathname === `/`
         },
         {
@@ -40,7 +40,22 @@ export function MobileMenu() {
             href: `/categories`,
             label: "Categorías",
             active: pathname === `/categories`
-        }
+        },
+        {
+            href: `/about`,
+            label: "About",
+            active: pathname === `/about`
+        },
+        {
+            href: `/our-history`,
+            label: "history",
+            active: pathname === `/our-history`
+        },
+        {
+            href: `/policies`,
+            label: "policies",
+            active: pathname === `/our-history`
+        },
     ]
 
     return (

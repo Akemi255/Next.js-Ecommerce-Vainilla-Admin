@@ -199,3 +199,10 @@ model LearningImage {
 
   @@index([learningId])
 }
+
+model Policies {
+  id        String   @id @default(uuid())
+  text      String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

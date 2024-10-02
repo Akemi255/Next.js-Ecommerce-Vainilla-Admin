@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
 import LearningToggle from "./learning-toggle";
 import { LearningCategory } from "@prisma/client";
+import { LogOut } from "lucide-react";
 
 interface RightButtonsProps {
     email: string
@@ -23,7 +24,8 @@ export default function RightButtons({ email, learningCategories }: RightButtons
         <>
             <LearningToggle learningCategories={learningCategories} />
             <ModeToggle />
-            <Button onClick={logout}>Cerrar sesión</Button>
+            <Button className="lg:flex md:hidden flex" onClick={logout}>Cerrar sesión</Button>
+            <LogOut className="cursor-pointer hidden md:flex lg:hidden" onClick={logout} />
         </>
     );
 }
