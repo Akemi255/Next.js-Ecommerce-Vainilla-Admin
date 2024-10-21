@@ -206,3 +206,8 @@ model Policies {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Logo {
+  id       String @id @default(uuid())
+  imageUrl String @default("https://i.postimg.cc/9FrGyDcD/logo.png")
+}
