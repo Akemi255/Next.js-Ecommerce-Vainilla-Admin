@@ -67,8 +67,8 @@ export default function CreateLearningModal({
 
     return (
         <Modal
-            title="Create a Learning Category"
-            description="Enter the name of the new category."
+            title="Crea una historia ancestral"
+            description="Introduce el nombre de la historia."
             isOpen={isOpen}
             onClose={onClose}
         >
@@ -79,7 +79,6 @@ export default function CreateLearningModal({
                         name="categoryName"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Learning Category Name</FormLabel>
                                 <FormControl>
                                     <Input
                                         id="categoryName"

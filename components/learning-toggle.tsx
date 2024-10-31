@@ -42,7 +42,7 @@ export default function LearningToggle({ learningCategories }: LearningTogglePro
                         className="sm:w-[150px] w-[100px]  flex justify-center text-center"
                     >
                         <Book className="ml-3 hidden sm:flex" />
-                        <h1 className="sm:ml-0 ml-3">Learning</h1>
+                        <h1 className="sm:ml-0 ml-3">Histories</h1>
                         <ChevronsUpDown className="ml-auto mr-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -62,7 +62,7 @@ export default function LearningToggle({ learningCategories }: LearningTogglePro
                         className="cursor-pointer"
                     >
                         <PlusCircle className="mr-2 h-5 w-5" />
-                        Añadir contenido
+                        Añadir historia
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
