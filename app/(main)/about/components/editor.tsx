@@ -15,8 +15,8 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import ToolbarPlugin from "@/plugins/toolbar-plugin";
 import EditorTheme from "@/theme/editor-theme";
 import { OnChangePlugin } from "@/plugins/onChange-plugin";
-import { About } from "@prisma/client";
 
+import { About } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 
 const editorConfig = {
@@ -36,12 +36,11 @@ export default function Editor({ initialData }: EditorProps) {
     const [loading, setloading] = useState(false);
 
 
-    // Función que se llama cuando el editor cambia
+
     function onChange(editorState: LexicalEditor) {
         setEditorState(editorState);
     }
 
-    // Función para obtener el texto normal del estado del editor
     const getPlainText = (editorState: any): string => {
         const json = editorState.toJSON();
         const extractText = (node: any): string => {
@@ -53,13 +52,14 @@ export default function Editor({ initialData }: EditorProps) {
             }
             if (node.type === 'text' && node.text) {
                 text += node.text;
+            } else if (node.type === 'paragraph') {
+                text += '<br />'
             }
             return text;
         };
         return extractText(json.root);
     };
 
-    // Función para guardar el contenido
     const handleSave = async () => {
         if (editorState) {
             try {
@@ -90,6 +90,14 @@ export default function Editor({ initialData }: EditorProps) {
         }
     };
 
+    const formatTextWithParagraphs = (text: string) => {
+        return text.split('<br />').map((line, index) => (
+            <p key={index}>
+                {line}
+            </p>
+        ));
+    };
+
     return (
         <>
             <LexicalComposer initialConfig={editorConfig}>
@@ -98,7 +106,7 @@ export default function Editor({ initialData }: EditorProps) {
                     <ToolbarPlugin />
                     <div className="editor-inner">
                         <RichTextPlugin
-                            placeholder={<span className="editor-placeholder">{initialData?.text || "Escribe aquí"}</span>}
+                            placeholder={<span className="editor-placeholder">{initialData?.text && formatTextWithParagraphs(initialData.text) || "Escribe aquí"}</span>}
                             contentEditable={<ContentEditable className="editor-input p-1 border rounded-lg" />}
                             ErrorBoundary={LexicalErrorBoundary}
                         />

@@ -53,6 +53,8 @@ export default function Editor({ initialData }: EditorProps) {
             }
             if (node.type === 'text' && node.text) {
                 text += node.text;
+            } else if (node.type === 'paragraph') {
+                text += '<br />'
             }
             return text;
         };
@@ -90,6 +92,14 @@ export default function Editor({ initialData }: EditorProps) {
         }
     };
 
+    const formatTextWithParagraphs = (text: string) => {
+        return text.split('<br />').map((line, index) => (
+            <p key={index}>
+                {line}
+            </p>
+        ));
+    };
+
     return (
         <>
             <LexicalComposer initialConfig={editorConfig}>
@@ -98,7 +108,7 @@ export default function Editor({ initialData }: EditorProps) {
                     <ToolbarPlugin />
                     <div className="editor-inner">
                         <RichTextPlugin
-                            placeholder={<span className="editor-placeholder">{initialData?.text || "Escribe aquí"}</span>}
+                            placeholder={<span className="editor-placeholder">{initialData?.text && formatTextWithParagraphs(initialData.text) || "Escribe aquí"}</span>}
                             contentEditable={<ContentEditable className="editor-input p-1 border rounded-lg" />}
                             ErrorBoundary={LexicalErrorBoundary}
                         />
