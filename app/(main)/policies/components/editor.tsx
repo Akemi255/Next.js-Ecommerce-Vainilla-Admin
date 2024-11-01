@@ -93,10 +93,15 @@ export default function Editor({ initialData }: EditorProps) {
     };
 
     const formatTextWithParagraphs = (text: string) => {
-        return text.split('<br />').map((line, index) => (
-            <p key={index}>
-                {line}
-            </p>
+
+        const formattedText = text.replace(/(<br \/>)+/g, '<br />').trim();
+
+        return formattedText.split(/<br \/>+/).map((line, index) => (
+            line.trim() ? (
+                <p key={index}>
+                    {line}
+                </p>
+            ) : <br key={index} />
         ));
     };
 

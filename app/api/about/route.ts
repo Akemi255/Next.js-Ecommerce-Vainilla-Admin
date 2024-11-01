@@ -10,18 +10,23 @@ export async function POST(req: Request) {
       return new NextResponse("Text is required", { status: 400 });
     }
 
+    const formattedText = text
+      .replace(/(<br \/>)(?=\s*<br \/>)/g, "<br />")
+      .replace(/<br \/>/g, "<br /> ")
+      .replace(/\s*<br \/>/g, "<br /> ");
+
     let about = await prismadb.about.findFirst();
 
     if (!about) {
       about = await prismadb.about.create({
         data: {
-          text,
+          text: formattedText,
         },
       });
     } else {
       about = await prismadb.about.update({
         where: { id: about.id },
-        data: { text },
+        data: { text: formattedText },
       });
     }
 

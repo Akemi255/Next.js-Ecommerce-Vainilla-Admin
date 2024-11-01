@@ -18,10 +18,15 @@ export async function POST(
       return new NextResponse("Category Id is required", { status: 400 });
     }
 
+    const formattedText = text
+      .replace(/(<br \/>)(?=\s*<br \/>)/g, "<br />")
+      .replace(/<br \/>/g, "<br /> ")
+      .replace(/\s*<br \/>/g, "<br /> ");
+
     const learning = await prismadb.learningCategory.update({
       where: { id: params.id },
       data: {
-        text: text,
+        text: formattedText,
       },
     });
 
