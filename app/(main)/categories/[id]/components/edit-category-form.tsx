@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import axios from "axios";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -16,10 +18,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
+import OneImageUpload from "@/components/one-image-upload";
 import { Category } from "@prisma/client";
 
 const categorySchema = z.object({
@@ -28,8 +27,8 @@ const categorySchema = z.object({
         .trim()
         .regex(/^\S+$/, { message: 'El nombre no puede contener espacios.' })
         .regex(/^[a-zA-Z0-9\s]+$/, { message: 'El nombre no puede contener tildes ni caracteres especiales.' }),
+    imageUrl: z.string().optional(),
 });
-
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
@@ -44,9 +43,14 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
-            name: category?.name || "",
+            name: category.name || "",
+            imageUrl: category.image || "",
         },
     });
+
+    const handleUpload = (url: string | undefined) => {
+        form.setValue("imageUrl", url || ""); // Actualiza el campo imageUrl en el formulario
+    };
 
     const onSubmit = async (values: CategoryFormValues) => {
         try {
@@ -56,7 +60,7 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
             router.refresh();
             toast.success("Categoría actualizada correctamente");
         } catch (error: any) {
-            toast.error("Something went wrong.");
+            toast.error("Algo salió mal.");
         } finally {
             setLoading(false);
         }
@@ -72,15 +76,28 @@ export default function EditCategoryForm({ category }: EditCategoryFormProps) {
                         name="name"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Name</FormLabel>
+                                <FormLabel>Nombre</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Category Name" {...field} disabled={loading} />
+                                    <Input placeholder="Nombre de la Categoría" {...field} disabled={loading} />
                                 </FormControl>
-                                <FormDescription>Category name</FormDescription>
+                                <FormDescription>Nombre de la categoría.</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
+
+                    <FormField
+                        control={form.control}
+                        name="imageUrl"
+                        render={() => (
+                            <FormItem>
+                                <FormLabel>Imagen de la Categoría</FormLabel>
+                                <OneImageUpload onUpload={handleUpload} imageUrl={form.getValues("imageUrl")} />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
                     <div className="flex items-center justify-end">
                         <Button type="submit" disabled={loading}>
                             {loading ? "Cargando..." : "Guardar Cambios"}

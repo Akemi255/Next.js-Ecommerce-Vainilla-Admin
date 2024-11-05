@@ -19,6 +19,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import OneImageUpload from "@/components/one-image-upload";
 
 const categorySchema = z.object({
     name: z.string()
@@ -26,21 +27,28 @@ const categorySchema = z.object({
         .trim()
         .regex(/^\S+$/, { message: 'El nombre no puede contener espacios.' })
         .regex(/^[a-zA-Z0-9\s]+$/, { message: 'El nombre no puede contener tildes ni caracteres especiales.' }),
+    imageUrl: z.string().optional(),
 });
-
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 
 export default function NewCategoryForm() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string>();
 
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
             name: "",
+            imageUrl: "",
         },
     });
+
+    const handleUpload = (url: string | undefined) => {
+        setImageUrl(url || "");
+        form.setValue("imageUrl", url || "");
+    };
 
     const onSubmit = async (values: CategoryFormValues) => {
         try {
@@ -71,6 +79,18 @@ export default function NewCategoryForm() {
                                     <Input placeholder="Ejemplo: Vainilla" {...field} disabled={loading} />
                                 </FormControl>
                                 <FormDescription>Nombre único para la categoría.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="imageUrl"
+                        render={() => (
+                            <FormItem>
+                                <FormLabel>Imagen de la Categoría</FormLabel>
+                                <OneImageUpload onUpload={handleUpload} imageUrl={imageUrl} />
                                 <FormMessage />
                             </FormItem>
                         )}

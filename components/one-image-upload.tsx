@@ -11,13 +11,12 @@ interface UploadImageProps {
     imageUrl?: string;
 }
 
-export default function OneImageUpload({ onUpload, imageUrl = "https://i.postimg.cc/9FrGyDcD/logo.png" }: UploadImageProps) {
+export default function OneImageUpload({ onUpload, imageUrl = "" }: UploadImageProps) {
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(imageUrl);
 
     const handleUpload = (result: any) => {
         if (result.event === "success") {
             const url = result.info.secure_url;
-            // Establecer la nueva imagen
             setUploadedImageUrl(url);
             if (onUpload) {
                 onUpload(url);
