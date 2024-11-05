@@ -31,7 +31,7 @@ export async function PATCH(
   try {
     const body = await req.json();
 
-    const { name } = body;
+    const { name, imageUrl } = body;
 
     if (!params.id) {
       return new NextResponse("Category id is required", { status: 400 });
@@ -42,12 +42,17 @@ export async function PATCH(
       return new NextResponse("Name is required", { status: 400 });
     }
 
+    if (!imageUrl) {
+      return new NextResponse("Image url is required", { status: 400 });
+    }
+
     await prismadb.category.update({
       where: {
         id: params.id,
       },
       data: {
         name: name,
+        image: imageUrl,
       },
     });
 
