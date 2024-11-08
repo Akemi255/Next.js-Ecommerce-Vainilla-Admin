@@ -25,7 +25,7 @@ const categorySchema = z.object({
     name: z.string()
         .min(1, { message: 'El nombre es obligatorio.' })
         .trim()
-        .regex(/^[a-zA-Z0-9\s]+$/, { message: 'El nombre no puede contener tildes ni caracteres especiales.' }),
+        .regex(/^[a-zA-ZÀ-ÿ0-9\s]+$/, { message: 'El nombre solo puede contener letras, números y espacios.' }),
     imageUrl: z.string().optional(),
 });
 

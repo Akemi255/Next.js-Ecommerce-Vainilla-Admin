@@ -106,7 +106,7 @@ export default function Editor({ initialData }: EditorProps) {
     return (
         <>
             <LexicalComposer initialConfig={editorConfig}>
-                <h1 className='text-center text-[30px] font-bold mt-3'>Texto de la sección</h1>
+                <h1 className='text-center text-[30px] font-bold mt-3'>Texto de la sección sobre nosotros</h1>
                 <div className="editor-container rounded-lg shadow-sm p-4">
                     <ToolbarPlugin />
                     <div className="editor-inner">

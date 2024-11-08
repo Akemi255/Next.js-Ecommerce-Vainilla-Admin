@@ -45,7 +45,7 @@ export default function AboutUsSection({ initialData, images }: AboutUsSectionPr
         <>
             <Editor initialData={initialData} />
             <Separator className='mt-7' />
-            <h1 className='text-center text-xl font-bold mt-6'>Imágenes de la sección</h1>
+            <h1 className='text-center text-xl font-bold mt-6'>Imágenes de la sección sobre nosotros</h1>
             <div className='flex justify-center items-center mt-2'>
                 <UploadImage onUpload={handleUpload} imageUrls={imageUrls} />
             </div>
