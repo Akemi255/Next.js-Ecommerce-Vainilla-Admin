@@ -144,11 +144,12 @@ model Category {
 }
 
 model About {
-  id        String       @id @default(uuid())
-  text      String?      @db.Text
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  images    AboutImage[]
+  id         String       @id @default(uuid())
+  text       String?      @db.Text
+  youtubeUrl String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  images     AboutImage[]
 }
 
 model AboutImage {
@@ -163,11 +164,12 @@ model AboutImage {
 }
 
 model OurHistory {
-  id        String            @id @default(uuid())
-  text      String?           @db.Text
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
-  images    OurHistoryImage[]
+  id         String            @id @default(uuid())
+  text       String?           @db.Text
+  youtubeUrl String?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  images     OurHistoryImage[]
 }
 
 model OurHistoryImage {

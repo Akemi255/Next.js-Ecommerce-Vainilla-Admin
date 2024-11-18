@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import YoutubeUploader from './youtube-uploader';
 
 interface AboutUsSectionProps {
     initialData?: About & { images: AboutImage[] };
@@ -53,6 +54,10 @@ export default function AboutUsSection({ initialData, images }: AboutUsSectionPr
                 <Button onClick={sendImages} disabled={loading}>
                     {loading ? "Guardando..." : "Guardar nuevas imágenes"}
                 </Button>
+            </div>
+            <Separator className='mt-7' />
+            <div className='flex justify-center items-center mt-2 mb-3'>
+                <YoutubeUploader url={initialData?.youtubeUrl || undefined} />
             </div>
         </>
     )
