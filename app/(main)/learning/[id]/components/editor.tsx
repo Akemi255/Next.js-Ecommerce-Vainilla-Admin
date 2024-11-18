@@ -15,7 +15,7 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import ToolbarPlugin from "@/plugins/toolbar-plugin";
 import EditorTheme from "@/theme/editor-theme";
 import { OnChangePlugin } from "@/plugins/onChange-plugin";
-import { About } from "@prisma/client";
+import { About, LearningCategory } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
@@ -29,7 +29,7 @@ const editorConfig = {
 };
 
 interface EditorProps {
-    initialData?: About
+    initialData?: LearningCategory
 }
 
 export default function Editor({ initialData }: EditorProps) {
