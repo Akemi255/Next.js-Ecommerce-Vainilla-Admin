@@ -135,12 +135,13 @@ model OrderItem {
 }
 
 model Category {
-  id        String    @id @default(uuid())
-  name      String    @unique
-  products  Product[]
-  image     String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id              String            @id @default(uuid())
+  name            String            @unique
+  products        Product[]
+  image           String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  AdvancedProduct AdvancedProduct[]
 }
 
 model About {
@@ -213,4 +214,44 @@ model Policies {
 model Logo {
   id       String @id @default(uuid())
   imageUrl String @default("https://i.postimg.cc/9FrGyDcD/logo.png")
+}
+
+model AdvancedProduct {
+  id          String           @id @default(uuid())
+  name        String
+  description String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  isFeature   Boolean          @default(false)
+  categoryId  String
+  category    Category         @relation(fields: [categoryId], references: [id])
+  variants    ProductVariant[]
+
+  @@index([categoryId])
+}
+
+model ProductVariant {
+  id                String                 @id @default(uuid())
+  advancedProductId String
+  advancedProduct   AdvancedProduct        @relation(fields: [advancedProductId], references: [id], onDelete: Cascade)
+  name              String
+  price             Float
+  stock             Int
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+  images            AdvancedProductImage[]
+
+  @@index([advancedProductId])
+}
+
+model AdvancedProductImage {
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ProductVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  productVariantId String
+
+  @@index([productVariantId])
 }

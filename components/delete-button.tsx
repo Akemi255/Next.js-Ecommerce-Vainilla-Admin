@@ -8,10 +8,10 @@ import { AlertModal } from "./modals/alert-modal";
 import { useState } from "react";
 
 interface DeleteButtonProps {
-    id: string
+    url: string
 }
 
-export default function DeleteButton({ id }: DeleteButtonProps) {
+export default function DeleteButton({ url }: DeleteButtonProps) {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const router = useRouter();
@@ -19,7 +19,7 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
     const handleDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/products/${id}`);
+            await axios.delete(`${url}`);
             router.refresh();
             toast.success("Producto eliminado con éxito")
         } catch (error) {
