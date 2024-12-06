@@ -43,15 +43,19 @@ export default async function ProductsPage() {
             <Separator className="my-4" />
             <h1 className="text-2xl font-bold mb-5 mt-2 text-center">Productos con presentaciones</h1>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {advancedproducts.map((product) => (
-                    <AdvancedProductCard
-                        key={product.id}
-                        id={product.id}
-                        name={product.name}
-                        description={product.description}
-                        category={product.category.name}
-                    />
-                ))}
+                {advancedproducts.map((product) => {
+                    return (
+                        <AdvancedProductCard
+                            key={product.id}
+                            id={product.id}
+                            name={product.name}
+                            description={product.description}
+                            variants={product.variants}
+                            category={product.category.name}
+
+                        />
+                    );
+                })}
             </div>
             <Separator className="my-4" />
             <h1 className="text-2xl font-bold mb-5 mt-2 text-center">Productos Normales</h1>
