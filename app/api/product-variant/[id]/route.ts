@@ -74,6 +74,12 @@ export async function DELETE(
       return new NextResponse("Product variant not found", { status: 404 });
     }
 
+    await prismadb.orderItem.deleteMany({
+      where: {
+        productId: params.id,
+      },
+    });
+
     await prismadb.productVariant.delete({
       where: { id },
     });

@@ -254,7 +254,7 @@ model AdvancedProductImage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ProductVariant   ProductVariant @relation(fields: [productVariantId], references: [id])
+  ProductVariant   ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
   productVariantId String
 
   @@index([productVariantId])

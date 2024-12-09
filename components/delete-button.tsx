@@ -24,6 +24,7 @@ export default function DeleteButton({ url }: DeleteButtonProps) {
             toast.success("Producto eliminado con éxito")
         } catch (error) {
             console.error("Error deleting product:", error);
+            toast.error("Error al eliminar el producto, elimine todas sus variantes primero")
         } finally {
             setLoading(false);
             setOpen(false);
