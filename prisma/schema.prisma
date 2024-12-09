@@ -123,15 +123,18 @@ model Order {
 }
 
 model OrderItem {
-  id        String  @id @default(uuid())
-  quantity  Int
-  orderId   String
-  Order     Order   @relation(fields: [orderId], references: [id])
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
+  id               String          @id @default(uuid())
+  quantity         Int
+  orderId          String
+  Order            Order           @relation(fields: [orderId], references: [id])
+  productId        String?
+  product          Product?        @relation(fields: [productId], references: [id])
+  productVariantId String?
+  productVariant   ProductVariant? @relation(fields: [productVariantId], references: [id])
 
   @@index([orderId])
   @@index([productId])
+  @@index([productVariantId])
 }
 
 model Category {
@@ -232,14 +235,15 @@ model AdvancedProduct {
 
 model ProductVariant {
   id                String                 @id @default(uuid())
-  advancedProductId String
-  advancedProduct   AdvancedProduct        @relation(fields: [advancedProductId], references: [id], onDelete: Cascade)
   name              String
   price             Float
   stock             Int
+  advancedProductId String
+  advancedProduct   AdvancedProduct        @relation(fields: [advancedProductId], references: [id], onDelete: Cascade)
+  images            AdvancedProductImage[]
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
-  images            AdvancedProductImage[]
+  orderItems        OrderItem[]
 
   @@index([advancedProductId])
 }

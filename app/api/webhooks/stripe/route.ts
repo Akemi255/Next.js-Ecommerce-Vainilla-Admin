@@ -52,20 +52,38 @@ export async function POST(req: Request) {
     });
 
     // Update stock based on the quantity purchased
-    const updateStockPromises = order.orderItems.map((orderItem) =>
-      prismadb.product.update({
-        where: {
-          id: orderItem.productId,
-        },
-        data: {
-          stock: {
-            decrement: orderItem.quantity,
+    const updateStockPromises = order.orderItems.map((orderItem) => {
+      if (orderItem.productId) {
+        // Update stock for Product
+        return prismadb.product.update({
+          where: {
+            id: orderItem.productId,
           },
-        },
-      })
-    );
+          data: {
+            stock: {
+              decrement: orderItem.quantity,
+            },
+          },
+        });
+      } else if (orderItem.productVariantId) {
+        // Update stock for ProductVariant
+        return prismadb.productVariant.update({
+          where: {
+            id: orderItem.productVariantId,
+          },
+          data: {
+            stock: {
+              decrement: orderItem.quantity,
+            },
+          },
+        });
+      }
+      return null;
+    });
 
-    await Promise.all(updateStockPromises);
+    await Promise.all(
+      updateStockPromises.filter((promise) => promise !== null)
+    );
   }
 
   return new NextResponse(null, { status: 200 });
