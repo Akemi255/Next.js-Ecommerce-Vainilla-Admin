@@ -1,10 +1,11 @@
+/*
 import { format } from "date-fns";
 
 import prismadb from "@/lib/prismadb";
 import { formatter } from "@/lib/format";
 import { truncateText } from "@/lib/truncate-text";
 import { OrderColumn } from "./types/columns";
-import { OrderClient } from "./components/order-table";
+import { OrderClient } from "./components/order-table";*/
 
 export default async function OrdersPage() {
     /*
