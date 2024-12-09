@@ -101,9 +101,9 @@ export default function AdvancedProductCard({
                 <CardDescription className="text-gray-600">{description}</CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="font-bold text-lg">Variante: {selectedVariant.name}</p>
-                <p className="font-bold text-lg">Precio: ${selectedVariant.price}</p>
-                <p className="font-bold text-lg">Stock: {selectedVariant.stock}</p>
+                <p className="font-bold text-lg">Variante: {selectedVariant?.name}</p>
+                <p className="font-bold text-lg">Precio: ${selectedVariant?.price}</p>
+                <p className="font-bold text-lg">Stock: {selectedVariant?.stock}</p>
 
                 <div className="flex flex-wrap gap-2 mt-4">
                     {variants.map((variant, index) => (
