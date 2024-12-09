@@ -32,6 +32,8 @@ export default async function ProductsPage() {
         }
     });
 
+    const filteredAdvancedProducts = advancedproducts.filter(product => product.variants.length > 0);
+
     return (
         <div className="p-4">
             <Link href="/products/new" className="w-full">
@@ -43,7 +45,7 @@ export default async function ProductsPage() {
             <Separator className="my-4" />
             <h1 className="text-2xl font-bold mb-5 mt-2 text-center">Productos con presentaciones</h1>
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {advancedproducts.map((product) => {
+                {filteredAdvancedProducts.map((product) => {
                     return (
                         <AdvancedProductCard
                             key={product.id}
